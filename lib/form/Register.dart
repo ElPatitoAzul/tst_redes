@@ -109,7 +109,7 @@ class _RegistroFormState extends State<RegistroForm>
 
   _enviarFormulario() async {
     await obtenerUbicacionActual();
-    print(_ineFoto);
+    
     var nombre = _nombreController.text;
     var telefono = _telefonoController.text;
     if (nombre.isEmpty || telefono.isEmpty) {
@@ -118,19 +118,16 @@ class _RegistroFormState extends State<RegistroForm>
       });
       // Validar que los campos no estén vacíos
       ElegantNotification.error(
-        width: 360,
-        notificationPosition: NotificationPosition.topRight,
-        animation: AnimationType.fromRight,
         title: const Text('Error'),
         description:
             const Text('Por favor, complete todos los campos obligatorios.'),
-        onDismiss: () {
-          // Acciones a realizar cuando se descarta la notificación de error
-        },
+        animation: AnimationType
+            .fromRight, // Verifica si este parámetro aún es válido.
       ).show(context);
+
       return;
     }
-    var URI_API = Uri.parse('http://actasalinstante.com:3035/api/user/new/');
+    var URI_API = Uri.parse('https://tst.register.users.ngrok.app:3035/api/user/new/');
     var req = new http.MultipartRequest("POST", URI_API);
     req.fields['name'] = nombre;
     req.fields['number_phone'] = telefono;
@@ -179,15 +176,16 @@ class _RegistroFormState extends State<RegistroForm>
 
             print(val);
             ElegantNotification.success(
-              width: 360,
-              notificationPosition: NotificationPosition.topRight,
-              animation: AnimationType.fromRight,
-              title: const Text('DATOS ENVIADOS'),
-              description: Text('${val}'),
+              width: 360, // Ancho del popup
+              title: const Text('DATOS ENVIADOS'), // Título de la notificación
+              description: Text('$val'), // Descripción dinámica
+              animation: AnimationType.fromRight, // Tipo de animación
               onDismiss: () {
-                print('This print will be displayed when dismissing the popup');
+                // Acción al descartar la notificación
+                print('Esta acción se ejecutará al cerrar la notificación.');
               },
             ).show(context);
+
             setState(() {
               isApiCallProcess = false;
             });
@@ -370,7 +368,8 @@ class _RegistroFormState extends State<RegistroForm>
               ElevatedButton(
                 child: Text('Enviar'),
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: colors,
+                  foregroundColor: Colors.white,
+                  backgroundColor: colors,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -398,7 +397,8 @@ class _RegistroFormState extends State<RegistroForm>
     String phone,
     String email,
   ) async {
-    //print(Token);
+    //print(Token);ngrok http 8035 --domain=tst.register.users.ngrok.app
+
     Map<String, String> mainheader = new Map();
     mainheader["content-type"] = "application/json";
 
@@ -411,7 +411,7 @@ class _RegistroFormState extends State<RegistroForm>
 
     var response = await http.post(
         Uri.parse(
-            'http://actasalinstante.com:3035/api/app/contacts/whenregister/add/' +
+            'https://tst.register.users.ngrok.app/api/app/contacts/whenregister/add/' +
                 contactos.toString()),
         headers: mainheader,
         body: json.encode(body));
